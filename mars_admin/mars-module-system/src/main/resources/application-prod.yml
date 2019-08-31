@@ -8,10 +8,10 @@ server:
   #sll 证书配置
   ssl:
     enabled: true
-    key-alias: mars.sweetcat.wang
+    key-alias: www.sweetcat.wang
     key-store-type: JKS
-    key-store: /usr/local/etc/mars.sweetcat.wang.jks
-    key-store-password: mars.sweetcat.wang
+    key-store: /usr/local/etc/www.sweetcat.wang.jks
+    key-store-password: www.sweetcat.wang
 
 
 management:
