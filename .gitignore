@@ -1,0 +1,9 @@
+/.idea
+/Mars.iml
+./target
+/logs
+/.idea
+target/
+LICENSE
+*.iml
+mars_admin/logs/

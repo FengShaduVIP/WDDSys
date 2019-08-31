@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mars.modules.wxapp.mapper.LottoInfoMapper">
+
+
+    <!--微信小程序查询首页每日推荐列表信息-->
+    <select id="queryLottoForIndex" resultType="java.util.LinkedHashMap">
+        SELECT l.id,l.lotto_no, l.banner, l.open_type AS  openType , DATE_FORMAT(l.open_time,'%Y-%m-%d %h:%i') AS openTime, l.view_num AS viewNum,
+            l.join_num AS joinNum , l.open_num as openNum, l.nick_name AS nickName,u.avatar_url as avatarUrl,l.create_by as wxNo
+        FROM wx_lotto_info l LEFT JOIN wx_user u ON u.wx_no = l.create_by WHERE l.is_show = 1 AND l.status = 0 AND  l.is_end = 0 ORDER BY l.create_time DESC
+    </select>
+
+    <!--查询个人抽奖活动历史-->
+    <select id="queryUserLottoForIndex" resultType="java.util.LinkedHashMap">
+        SELECT l.id,l.lotto_no as lottoNo, l.banner, l.open_type AS  openType , l.is_end AS isEnd,DATE_FORMAT(l.create_time,'%Y-%m-%d %h:%i') AS createTime, l.view_num AS viewNum,
+          l.join_num AS joinNum ,u.avatar_url as avatarUrl
+        FROM wx_lotto_info l LEFT JOIN wx_user u ON u.wx_no = l.create_by WHERE l.create_by = #{wxNo} AND l.status = 0 ORDER BY l.create_time DESC
+    </select>
+
+
+
+    <!--根据ID 删除-->
+    <update id="deleteLottoById" >
+        UPDATE wx_lotto_info SET status = 1 WHERE id = #{lottoId}
+    </update>
+
+</mapper>
