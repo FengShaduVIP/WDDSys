@@ -24,4 +24,8 @@ public interface ILottoPlayerService extends IService<LottoPlayer> {
     boolean checkIsHaveJoinLotto(String wxNo, String lottoId);
 
     Page<Map<String,Object>> queryMyJoinOrWin(Page<Object> objectPage, Integer cardType, String wxNo);
+
+    List<LottoPlayer> queryListByLottoId(String id);
+
+    void savePrizeInfo(LottoPlayer playerUser, String prizeId);
 }

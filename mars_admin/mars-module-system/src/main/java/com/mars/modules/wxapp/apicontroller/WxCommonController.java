@@ -10,6 +10,7 @@ import com.mars.modules.system.controller.CommentController;
 import com.mars.modules.system.service.impl.SysBaseApiImpl;
 import com.mars.modules.wxapp.entity.WxUser;
 import com.mars.modules.wxapp.service.ICommonService;
+import com.mars.modules.wxapp.service.ILottoPlayerService;
 import com.mars.modules.wxapp.service.IWxUserService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,8 @@ public class WxCommonController extends CommentController {
     @Resource
     private IWxUserService wxUserService;
     @Resource
+    private ILottoPlayerService playerService;
+    @Resource
     private SysBaseApiImpl sysBaseApi;
     @Resource
     private ICommonService commonService;
@@ -48,9 +51,10 @@ public class WxCommonController extends CommentController {
         try {
             String accessToken = commonService.getWxAccessToken();
             String cardId = params.getString("id");
-            String scene = AesEncryptUtil.encrypt(cardId);
-            Map<String,String> resultMap = new HashMap<>();
-            resultMap.put("scene",scene);
+            //String scene = AesEncryptUtil.encrypt(cardId);
+            Map<String,Object> resultMap = new HashMap<>();
+            resultMap.put("scene",cardId);
+            resultMap.put("cardInfo",playerService.getById(cardId));
             resultMap.put("accessToken",accessToken);
             return Result.ok(resultMap);
         }catch (Exception e){

@@ -2,6 +2,7 @@ package com.mars.modules.wxapp.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mars.modules.wxapp.entity.LottoPrize;
 import com.mars.modules.wxapp.mapper.LottoPrizeMapper;
 import com.mars.modules.wxapp.service.ILottoPrizeService;
@@ -57,5 +58,19 @@ public class LottoPrizeServiceImpl extends ServiceImpl<LottoPrizeMapper, LottoPr
     @Override
     public List<Map<String, Object>> queryPrizesByLottoIdOrLottoNo(String idOrNo) {
         return baseMapper.queryPrizesByLottoIdOrLottoNo(idOrNo);
+    }
+
+    /**
+     * 根据抽奖活动ID  查询活动奖品列表
+     * @param id
+     * @return
+     */
+    @Override
+    public List<LottoPrize> queryPrizesByLottoId(String id) {
+        QueryWrapper<LottoPrize> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",0);
+        queryWrapper.eq("lotto_id",id);
+        queryWrapper.orderByAsc("sort");
+        return baseMapper.selectList(queryWrapper);
     }
 }

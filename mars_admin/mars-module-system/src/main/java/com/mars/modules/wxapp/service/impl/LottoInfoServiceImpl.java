@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description: 微信小程序活动表
@@ -45,6 +42,8 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
             lottoInfo.setAvatarUrl(wxUser.getAvatarUrl());
             lottoInfo.setWxNo(wxUser.getWxNo());
         }
+        wxUser.setNewNum(wxUser.getNewNum()+1);
+        wxUserService.updateById(wxUser);
         lottoInfo.setIsShow(1);
         lottoInfo.setLottoNo(getLottoNo());
         baseMapper.insert(lottoInfo);
@@ -93,6 +92,8 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
         QueryWrapper<LottoInfo> queryWrapper = new QueryWrapper<LottoInfo>();
         queryWrapper.eq("lotto_no",lottoNo).or().eq("id ",lottoNo);
         LottoInfo lottoInfo = baseMapper.selectOne(queryWrapper);
+        lottoInfo.setViewNum(lottoInfo.getViewNum()+1);
+        baseMapper.updateById(lottoInfo);
         if(lottoInfo!=null){
             List<Map<String,Object>> prizeList = prizeService.queryPrizesByLottoIdOrLottoNo(lottoInfo.getId());
             List<Map<String,Object>> contents =  contentService.queryContentsByLottoIdOrLottoNo(lottoInfo.getId());
@@ -105,6 +106,7 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
             lottoInfoMap.put("contents",contents);
             lottoInfoMap.put("prizes",prizeList);
         }
+
         lottoInfoMap.put("lottoNo",lottoInfo.getLottoNo());
         lottoInfoMap.put("id",lottoInfo.getId());
         lottoInfoMap.put("avatarUrl",lottoInfo.getAvatarUrl());
@@ -141,12 +143,16 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
             if(lottoInfo==null){
                 return false;
             }
+            lottoInfo.setJoinNum(lottoInfo.getJoinNum()+1);
+            baseMapper.updateById(lottoInfo);
             LottoPlayer player = new LottoPlayer();
             player.setWxNo(wxNo);
             player.setLottoId(lottoId);
             player.setLottoNo(lottoInfo.getLottoNo());
             player.setAvatarUrl(lottoInfo.getAvatarUrl());
             player.setNickName(lottoInfo.getNickName());
+            //更新创建者 统计数据
+            wxUserService.addSumJoinNum(lottoInfo.getWxNo());
             return playerService.save(player);
         }
     }
@@ -154,6 +160,27 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
     @Override
     public boolean deleteLottoById(String lottoId) {
         return baseMapper.deleteLottoById(lottoId)>0?true:false;
+    }
+
+
+    /**
+     * 查询待开奖的活动
+     * @return
+     */
+    @Override
+    public List<LottoInfo> queryNotOpenLotto(int type) {
+        QueryWrapper<LottoInfo> queryWrapper = new QueryWrapper<>();
+        if(type>1){
+            queryWrapper.eq("status",0);
+            queryWrapper.eq("is_end",0).apply("open_num < join_num");
+            return baseMapper.selectList(queryWrapper);
+        }else {
+            queryWrapper.eq("open_type",0);
+            queryWrapper.le("open_time",new Date());
+            queryWrapper.eq("status",0);
+            queryWrapper.eq("is_end",0);
+            return baseMapper.selectList(queryWrapper);
+        }
     }
 
     /**

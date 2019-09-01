@@ -27,4 +27,6 @@ public interface ILottoInfoService extends IService<LottoInfo> {
     boolean joinLotto(String wxNo, String lottoId);
 
     boolean deleteLottoById(String lottoId);
+
+    List<LottoInfo> queryNotOpenLotto(int type);
 }

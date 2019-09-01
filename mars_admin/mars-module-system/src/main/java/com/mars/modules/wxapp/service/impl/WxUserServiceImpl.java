@@ -196,6 +196,32 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
     }
 
     /**
+     * 更新 发奖者 总参与人数
+     * @param wxNo
+     */
+    @Override
+    public void addSumJoinNum(String wxNo) {
+        WxUser wxUser = getUserByWxNo(wxNo);
+        if(wxUser!=null){
+            wxUser.setJoinNum(wxUser.getJoinNum()+1);
+            baseMapper.updateById(wxUser);
+        }
+    }
+
+    /**
+     * 更新 发奖者 总中奖人数
+     * @param wxNo
+     */
+    @Override
+    public void addSumWinnerNum(String wxNo, int winnerSumNum) {
+        WxUser wxUser = getUserByWxNo(wxNo);
+        if(wxUser!=null){
+            wxUser.setJoinNum(wxUser.getWinNum()+winnerSumNum);
+            baseMapper.updateById(wxUser);
+        }
+    }
+
+    /**
      * 获取 系统微信编号 000001
      * @return
      */

@@ -44,6 +44,18 @@ public class WxUser {
 	@Excel(name = "头像地址", width = 15)
     @ApiModelProperty(value = "头像地址")
 	private java.lang.String avatarUrl;
+	/**头像地址*/
+	@Excel(name = "参与人数", width = 15)
+	@ApiModelProperty(value = "头像地址")
+	private java.lang.Integer joinNum;
+	/**头像地址*/
+	@Excel(name = "中奖人数", width = 15)
+	@ApiModelProperty(value = "头像地址")
+	private java.lang.Integer winNum;
+	/**头像地址*/
+	@Excel(name = "发起活动", width = 15)
+	@ApiModelProperty(value = "头像地址")
+	private java.lang.Integer newNum;
 	/**城市*/
 	@Excel(name = "城市", width = 15)
     @ApiModelProperty(value = "城市")

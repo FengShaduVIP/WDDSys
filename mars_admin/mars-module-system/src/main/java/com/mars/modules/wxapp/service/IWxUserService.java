@@ -24,4 +24,8 @@ public interface IWxUserService extends IService<WxUser> {
     WxUser getUserByWxNo(String username);
 
     Map<String,String> queryMyAddress(String wxNo);
+
+    void addSumJoinNum(String wxNo);
+
+    void addSumWinnerNum(String wxNo, int winnerSumNum);
 }

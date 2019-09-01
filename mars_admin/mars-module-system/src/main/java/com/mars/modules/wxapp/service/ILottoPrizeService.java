@@ -18,4 +18,6 @@ public interface ILottoPrizeService extends IService<LottoPrize> {
     void savePrizes(String lottoId, String lottoNo,JSONArray prizes);
 
     List<Map<String,Object>> queryPrizesByLottoIdOrLottoNo(String lottoId);
+
+    List<LottoPrize> queryPrizesByLottoId(String id);
 }

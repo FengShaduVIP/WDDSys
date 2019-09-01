@@ -1,10 +1,13 @@
 package com.mars.modules.wxapp.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mars.modules.wxapp.entity.LottoPlayer;
+import com.mars.modules.wxapp.entity.LottoPrize;
 import com.mars.modules.wxapp.mapper.LottoPlayerMapper;
 import com.mars.modules.wxapp.service.ILottoPlayerService;
 import com.mars.modules.wxapp.service.ILottoPrizeService;
+import com.mars.modules.wxapp.service.IWxUserService;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ public class LottoPlayerServiceImpl extends ServiceImpl<LottoPlayerMapper, Lotto
 
     @Resource
     private ILottoPrizeService prizeService;
+
 
     @Override
     public Page<Map<String, Object>> queryPlayersByLottoIdOrLottoNo(Page<Object> page,String idOrNo) {
@@ -50,7 +54,6 @@ public class LottoPlayerServiceImpl extends ServiceImpl<LottoPlayerMapper, Lotto
             LottoPlayer player = new LottoPlayer();
             player.setLottoId(lottoId);
             player.setWxNo(wxNo);
-
             return false;
         }
     }
@@ -85,5 +88,40 @@ public class LottoPlayerServiceImpl extends ServiceImpl<LottoPlayerMapper, Lotto
             lottoMap.put("prizes",prizeList);
         }
         return listPage;
+    }
+
+    /**
+     * 根据活动ID 查询所有参与人员
+     * @param id
+     * @return
+     */
+    @Override
+    public List<LottoPlayer> queryListByLottoId(String id) {
+        QueryWrapper<LottoPlayer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("lotto_id",id);
+        queryWrapper.eq("status",0);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 保存获奖着 奖品信息
+     * @param playerUser
+     * @param prizeId
+     */
+    @Override
+    public void savePrizeInfo(LottoPlayer playerUser, String prizeId) {
+        try {
+            LottoPrize prizeInfo = prizeService.getById(prizeId);
+            playerUser.setPrizeId(prizeId);
+            playerUser.setPrizeName(prizeInfo.getName());
+            playerUser.setPrizeImg(prizeInfo.getImgUrl());
+            playerUser.setIsWin(1);
+            playerUser.setType(prizeInfo.getType());
+            baseMapper.updateById(playerUser);
+        }catch (Exception e){
+            log.error("保存中奖者奖品信息出错");
+            e.printStackTrace();
+        }
+
     }
 }

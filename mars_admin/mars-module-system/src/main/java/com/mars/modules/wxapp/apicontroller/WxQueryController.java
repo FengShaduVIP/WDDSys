@@ -3,6 +3,7 @@ package com.mars.modules.wxapp.apicontroller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mars.common.api.vo.Result;
+import com.mars.common.util.StringUtils;
 import com.mars.modules.system.controller.CommentController;
 import com.mars.modules.system.service.impl.SysBaseApiImpl;
 import com.mars.modules.wxapp.entity.WxUser;
@@ -12,10 +13,7 @@ import com.mars.modules.wxapp.service.IWxUserService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -43,6 +41,22 @@ public class WxQueryController extends CommentController{
     @Resource
     private IWxUserService wxUserService;
 
+    /**
+     * 查询 个人信息
+     */
+    @GetMapping("queryUserInfo")
+    @ResponseBody
+    public Result queryUserInfo(@RequestParam String wxNo){
+        try {
+            if(StringUtils.checkIsNull(wxNo)){
+                return Result.error("wxNo 参数不能为空");
+            }
+            return Result.ok(wxUserService.getUserByWxNo(wxNo));
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.error("查询个人信息失败，服务器出错");
+        }
+    }
 
     /**
      * 查询首页抽奖活动
@@ -71,6 +85,9 @@ public class WxQueryController extends CommentController{
     @GetMapping("queryUserLottos")
     public Result queryUserLottos(@RequestParam String wxNo,@RequestParam Integer page,@RequestParam Integer pageSize){
         try {
+            if(StringUtils.checkIsNull(wxNo)){
+                wxNo = getLoginUserName();
+            }
             IPage<Map<String,Object>> lottoList = lottoInfoService.queryUserLottoForIndex(wxNo,page,pageSize);
             return Result.ok(lottoList);
         }catch (Exception e){
@@ -89,6 +106,7 @@ public class WxQueryController extends CommentController{
     @GetMapping("queryLottoDetail")
     public Result queryLottoDetail(@RequestParam String lottoNo){
         try {
+            String wxNo = getLoginUserName();
             String userId = getLoginUserId();
             Map<String,Object> lottoDetail = lottoInfoService.queryDetailByLottoNo(lottoNo);
             if(userId.equals(MapUtils.getString(lottoDetail,"createBy"))){
@@ -96,6 +114,7 @@ public class WxQueryController extends CommentController{
             }else{
                 lottoDetail.put("isOwer",0);
             }
+            lottoDetail.put("isJoin",playerService.checkIsHaveJoinLotto(wxNo,lottoNo));
             return Result.ok(lottoDetail);
         }catch (Exception e){
             e.printStackTrace();

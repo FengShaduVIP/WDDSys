@@ -31,7 +31,7 @@ public class WxIndexController extends CommentController {
     private ILottoInfoService lottoInfoService;
 
     @PostMapping("joinLotto")
-    public Result queryUserLottos(@RequestBody JSONObject params){
+    public Result joinLotto(@RequestBody JSONObject params){
         try {
             String wxNo = getLoginUserName();
             String lottoId = params.getString("id");

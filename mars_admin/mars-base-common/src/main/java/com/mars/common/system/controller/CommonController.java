@@ -60,6 +60,7 @@ public class CommonController {
 			}else{
 				uploadToken = QiniuCloudUtil.getToken("wdd_01");
 				redisUtil.set(CacheConstant.QINIU_UPTOKEN_CACHE,uploadToken);
+				redisUtil.expire(CacheConstant.QINIU_UPTOKEN_CACHE,3500);
 			}
 			map.put("domain","img.cdn.sweetcat.wang");
 			map.put("token",uploadToken);
@@ -81,6 +82,7 @@ public class CommonController {
 		if(!redisUtil.hasKey(CacheConstant.QINIU_UPTOKEN_CACHE)){
 			upToken = QiniuCloudUtil.getToken("wdd_01");
 			redisUtil.set(CacheConstant.QINIU_UPTOKEN_CACHE,upToken);
+			redisUtil.expire(CacheConstant.QINIU_UPTOKEN_CACHE,3500);
 			log.info("bucketNm:{},获取新的uptoken:{}","wdd_01",upToken);
 		}else{
 			upToken = redisUtil.get(CacheConstant.QINIU_UPTOKEN_CACHE).toString();
