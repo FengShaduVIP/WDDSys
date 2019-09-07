@@ -41,6 +41,27 @@ public class WxCommonController extends CommentController {
     @Resource
     private ICommonService commonService;
 
+
+    /**
+     * 获取微信小程序 accessToken
+     * @return
+     */
+    @PostMapping("getWxAccessToken")
+    @ResponseBody
+    public Result getWxAccessToken(){
+        try {
+            String accessToken = commonService.getWxAccessToken();
+            Map<String,Object> resultMap = new HashMap<>();
+            resultMap.put("accessToken",accessToken);
+            return Result.ok(resultMap);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("获取微信小程序 accessToken信息失败--->"+e.getMessage());
+            return Result.error("服务器出错，");
+        }
+    }
+
+
     /**
      * 微信小程序 上传文件后记录日志
      * @return
