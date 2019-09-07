@@ -61,6 +61,27 @@ public class WxCommonController extends CommentController {
         }
     }
 
+    /**
+     * 获取微信小程序 二维码图片地址
+     * @return
+     */
+    @PostMapping("getWxQrCodeUrl")
+    @ResponseBody
+    public Result getWxQrCodeUrl(@RequestBody JSONObject params){
+        try {
+            String page = params.getString("page");
+            String scene = params.getString("scene");
+            String width = params.getString("width");
+            String imgName = params.getString("imgName");
+            boolean is_hyaline = params.getBoolean("is_hyaline");
+            return commonService.getWxQrCodeUrl("wdd_01",imgName,page,scene,width,is_hyaline);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("获取微信小程序 accessToken信息失败--->"+e.getMessage());
+            return Result.error("服务器出错，");
+        }
+    }
+
 
     /**
      * 微信小程序 上传文件后记录日志

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 import com.google.gson.Gson;
+import com.mars.common.api.vo.Result;
 import com.mars.common.constant.CacheConstant;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
@@ -185,6 +186,27 @@ public class QiniuCloudUtil {
             result = new Result(false);
         }
         return result;
+    }
+    /**
+     * 上传输入流
+     * @param bucketNm  bucket的名称
+     * @param in        输入流
+     * @return
+     */
+    public static com.mars.common.api.vo.Result uploadQrCode(String bucketNm,InputStream in,String key) {
+        try {
+            UploadManager uploadManager = getUploadManager(bucketNm);
+            //获取token
+            String token = getToken(bucketNm);
+            //上传输入流
+            Response response = uploadManager.put(in,key,token, null,null);
+            //解析上传成功的结果
+            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+           return com.mars.common.api.vo.Result.ok(putRet.key);
+        }catch (Exception e) {
+            log.error("七牛云 上传微信小程序二维码失败");
+        }
+        return com.mars.common.api.vo.Result.ok();
     }
     /**
      * 通过文件来传递数据

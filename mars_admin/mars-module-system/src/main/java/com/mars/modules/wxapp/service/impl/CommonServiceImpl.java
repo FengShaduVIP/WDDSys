@@ -2,12 +2,13 @@ package com.mars.modules.wxapp.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.mars.common.api.vo.Result;
 import com.mars.common.constant.CacheConstant;
 import com.mars.common.system.util.JwtUtil;
 import com.mars.common.util.HttpUtil;
+import com.mars.common.util.OKHttpUtil;
 import com.mars.common.util.QiniuCloudUtil;
 import com.mars.common.util.RedisUtil;
-import com.mars.modules.shiro.vo.DefContants;
 import com.mars.modules.wxapp.service.ICommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URI;
 
 @Service
@@ -84,5 +88,28 @@ public class CommonServiceImpl implements ICommonService {
             }
             return access_token;
         }
+    }
+
+    /**
+     * 生成微信小程序二维码 并返回二维码图片地址
+     * @param bucketNm
+     * @param imgName
+     * @param page
+     * @param scene
+     * @param width
+     * @param is_hyaline
+     * @return
+     */
+    @Override
+    public Result getWxQrCodeUrl(String bucketNm,String imgName,String page,String scene, String width, boolean is_hyaline) {
+        String url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+getWxAccessToken();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("page",page);
+        jsonObject.put("scene",scene);
+        jsonObject.put("width",width);
+        jsonObject.put("is_hyaline",is_hyaline);
+        byte response[] = OKHttpUtil.httpPost(url,jsonObject);
+        InputStream is = new BufferedInputStream(new ByteArrayInputStream(response));
+        return QiniuCloudUtil.uploadQrCode(bucketNm,is,imgName);
     }
 }
