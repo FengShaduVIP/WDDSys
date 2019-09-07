@@ -30,4 +30,6 @@ public interface CacheConstant {
 
 	public static final String WXAPP_ACCESS_TOKEN = "access_token";
 
+	public static final String WXAPP_QRCODE_URL = "wxapp_qrcode_url";
+
 }

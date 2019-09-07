@@ -78,7 +78,6 @@ public class CommonController {
 	public Map<String,String> getUpToken(){
 		Map<String,String> map = new HashMap<>();
 		String upToken = null;
-		RedisUtil redisUtil = new RedisUtil();
 		if(!redisUtil.hasKey(CacheConstant.QINIU_UPTOKEN_CACHE)){
 			upToken = QiniuCloudUtil.getToken("wdd_01");
 			redisUtil.set(CacheConstant.QINIU_UPTOKEN_CACHE,upToken);
