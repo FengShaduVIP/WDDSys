@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -122,6 +123,14 @@ public class LottoPlayerServiceImpl extends ServiceImpl<LottoPlayerMapper, Lotto
             log.error("保存中奖者奖品信息出错");
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public Map<String, Object> findPlayerInfo(String lottoNo, String wxNo) {
+        List<Map<String,Object>> cardList = baseMapper.findPlayerInfo(lottoNo,wxNo);
+        if(cardList==null){
+            return new HashMap<>();
+        }
+        return cardList.get(0);
     }
 }

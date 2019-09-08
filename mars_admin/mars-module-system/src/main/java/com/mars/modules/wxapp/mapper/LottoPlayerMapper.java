@@ -23,4 +23,6 @@ public interface LottoPlayerMapper extends BaseMapper<LottoPlayer> {
     Page<Map<String,Object>> queryMyJoinOrWin(Page<Object> page, @Param("type") Integer cardType,@Param("wxNo") String wxNo);
 
     Integer checkIsHaveJoinLotto(@Param("wxNo") String wxNo,@Param("lottoId") String lottoId);
+
+    List<Map<String,Object>> findPlayerInfo(@Param("lottoNo")String lottoNo, @Param("wxNo")String wxNo);
 }

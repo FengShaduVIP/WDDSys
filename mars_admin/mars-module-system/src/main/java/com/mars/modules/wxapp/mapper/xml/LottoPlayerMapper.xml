@@ -22,13 +22,18 @@
 
     <!--查询我的卡券-->
     <select id="queryMyCard" resultType="java.util.Map">
-        SELECT id, prize_img as img , prize_name AS name ,wx_no as wxNo,nick_name as nickName, is_used as isUsed, avatar_url AS  avatarUrl, name,DATE_FORMAT(create_time,'%Y-%m-%d %h:%i') AS createTime FROM wx_player where
+        SELECT id, prize_img as img ,lotto_no AS lottoNo,prize_name AS name ,wx_no as wxNo,nick_name as nickName, is_used as isUsed, avatar_url AS  avatarUrl, name,DATE_FORMAT(create_time,'%Y-%m-%d %h:%i') AS createTime FROM wx_player where
         wx_no = #{wxNo} AND type = #{type} and is_win = 1 AND status = 0 ORDER BY is_used ASC ,create_time DESC
     </select>
 
     <!--检查是否已参与 该抽奖 -->
     <select id="checkIsHaveJoinLotto" resultType="java.lang.Integer">
         SELECT count(1) FROM wx_player WHERE wx_no = #{wxNo} AND lotto_id = #{lottoId} AND status = 0
+    </select>
+
+    <!--查询卡券信息-->
+    <select id="findPlayerInfo" resultType="java.util.Map">
+        SELECT u.avatar_url,u.nick_name,p.address,p.tel,p.name, p.prize_img AS img ,p.prize_name AS  prizeName FROM wx_player p LEFT JOIN wx_user u ON u.wx_no = p.wx_no WHERE p.lotto_no = #{lottoNo} AND p.wx_no = #{wxNo} AND p.status = 0
     </select>
 
 </mapper>

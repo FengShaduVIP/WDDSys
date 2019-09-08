@@ -28,4 +28,6 @@ public interface ILottoPlayerService extends IService<LottoPlayer> {
     List<LottoPlayer> queryListByLottoId(String id);
 
     void savePrizeInfo(LottoPlayer playerUser, String prizeId);
+
+    Map<String,Object> findPlayerInfo(String lottoNo, String wxNo);
 }

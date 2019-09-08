@@ -1,5 +1,6 @@
 package com.mars.modules.wxapp.apicontroller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mars.common.api.vo.Result;
@@ -137,6 +138,29 @@ public class WxQueryController extends CommentController{
             String userName = getLoginUserName();
             Page<Map<String,Object>> cardList = playerService.queryMyCard(new Page<Object>(page,pageSize),type,userName);
             return Result.ok(cardList);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+            log.info("查询我的卡包列表失败");
+            return Result.error("查询失败，服务器出错");
+        }
+    }
+
+    /**
+     * 查询二维码卡券内容
+     * @return
+     */
+    @PostMapping("queryWxCardInfo")
+    @ResponseBody
+    public Result queryWxCardInfo(@RequestBody JSONObject params){
+        try {
+            String scene = params.getString("scene");
+            if(StringUtils.checkIsNull(scene)){
+                return Result.error("传入参数错误");
+            }
+            String str[] = scene.split("_");
+            Map<String,Object> resultMap = playerService.findPlayerInfo(str[0],str[1]);
+            return Result.ok(resultMap);
         }catch (Exception e){
             e.printStackTrace();
             log.error(e.getMessage());
