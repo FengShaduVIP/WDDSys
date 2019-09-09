@@ -154,12 +154,19 @@ public class WxQueryController extends CommentController{
     @ResponseBody
     public Result queryWxCardInfo(@RequestBody JSONObject params){
         try {
+            String wxNo = getLoginUserName();
             String scene = params.getString("scene");
             if(StringUtils.checkIsNull(scene)){
                 return Result.error("传入参数错误");
             }
             String str[] = scene.split("_");
+            if(!wxNo.equals(str[2])){
+                return Result.error("请使用活动发起者扫描该卡券");
+            }
             Map<String,Object> resultMap = playerService.findPlayerInfo(str[0],str[1]);
+            if(resultMap==null){
+                return Result.error("该卡券已使用");
+            }
             return Result.ok(resultMap);
         }catch (Exception e){
             e.printStackTrace();

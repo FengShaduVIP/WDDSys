@@ -33,7 +33,7 @@
 
     <!--查询卡券信息-->
     <select id="findPlayerInfo" resultType="java.util.Map">
-        SELECT u.avatar_url,u.nick_name,p.address,p.tel,p.name, p.prize_img AS img ,p.prize_name AS  prizeName FROM wx_player p LEFT JOIN wx_user u ON u.wx_no = p.wx_no WHERE p.lotto_no = #{lottoNo} AND p.wx_no = #{wxNo} AND p.status = 0
+        SELECT p.id, u.avatar_url,u.nick_name,p.address,p.tel,p.name, p.prize_img AS img ,p.prize_name AS  prizeName,DATE_FORMAT(p.create_time,'%Y-%m-%d %h:%i') AS createTime FROM wx_player p LEFT JOIN wx_user u ON u.wx_no = p.wx_no WHERE p.is_used=0 AND p.lotto_no = #{lottoNo} AND p.wx_no = #{wxNo} AND p.status = 0
     </select>
 
 </mapper>

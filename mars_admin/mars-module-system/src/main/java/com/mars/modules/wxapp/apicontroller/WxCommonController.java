@@ -22,7 +22,6 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * 微信小程序公共 controller
  */
@@ -159,6 +158,28 @@ public class WxCommonController extends CommentController {
             result.error500("操作失败");
         }
         return result;
+    }
+
+    /**
+     * 核销卡券
+     * @param jsonObject
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("confirmCard")
+    public Result confirmCard(@RequestBody JSONObject jsonObject){
+        try {
+            String wxNo = getLoginUserName();
+            String id = jsonObject.getString("id");
+            if(StringUtils.isEmpty(id)){
+                return Result.error("请稍后重试");
+            }
+            String msg = playerService.confirmCard(id,wxNo);
+            return Result.ok(msg);
+        }catch (Exception e){
+            log.error("核销卡券出错"+e.getMessage());
+            return Result.error("服务器出错，请联系客服");
+        }
     }
 
 

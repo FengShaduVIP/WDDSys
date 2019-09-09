@@ -128,9 +128,29 @@ public class LottoPlayerServiceImpl extends ServiceImpl<LottoPlayerMapper, Lotto
     @Override
     public Map<String, Object> findPlayerInfo(String lottoNo, String wxNo) {
         List<Map<String,Object>> cardList = baseMapper.findPlayerInfo(lottoNo,wxNo);
-        if(cardList==null){
-            return new HashMap<>();
+        if(cardList==null||cardList.size()<1){
+            return null;
         }
         return cardList.get(0);
+    }
+
+    /**
+     * 核销卡券
+     * @param id
+     * @return
+     */
+    @Override
+    public String confirmCard(String id,String wxNo) {
+        LottoPlayer player = baseMapper.selectById(id);
+        if(player.getIsUsed()>0){
+            return "该卡券已使用";
+        }
+        if(wxNo.equals(player.getWxNo())){
+            player.setIsUsed(1);
+            baseMapper.updateById(player);
+            return "核销成功";
+        }else{
+            return "无权核销该卡券";
+        }
     }
 }
