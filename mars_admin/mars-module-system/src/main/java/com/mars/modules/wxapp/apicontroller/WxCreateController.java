@@ -1,6 +1,7 @@
 package com.mars.modules.wxapp.apicontroller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -115,15 +116,23 @@ public class WxCreateController extends CommentController {
             String region = params.getString("region");
             String name = params.getString("name");
             String address = params.getString("address");
+            boolean isCard = params.getBoolean("isCard");
             if (StringUtils.checkIsNull(tel) || StringUtils.checkIsNull(region) ||
                     StringUtils.checkIsNull(name) || StringUtils.checkIsNull(address)) {
                 return Result.error("有必填项为空，不能保存");
             }
-            wxUser.setConsignee(name);
-            wxUser.setTel(tel);
-            wxUser.setDetailAddress(address);
-            wxUser.setRegion(region);
-            wxUserService.updateById(wxUser);
+            if(isCard){
+                String id = params.getString("cardId");
+                JSONArray array = JSON.parseArray(region);
+                region = array.getString(0)+" "+array.getString(1)+" "+array.getString(2)+" ";
+                playerService.saveCardAddress(id,name,tel,region+address);
+            }else {
+                wxUser.setConsignee(name);
+                wxUser.setTel(tel);
+                wxUser.setDetailAddress(address);
+                wxUser.setRegion(region);
+                wxUserService.updateById(wxUser);
+            }
             return Result.ok("保存成功");
         } catch (Exception e) {
             log.info("保存我的地址失败");
@@ -131,7 +140,6 @@ public class WxCreateController extends CommentController {
             return Result.error("保存我的地址失败，服务器出错");
         }
     }
-
 
 
 }

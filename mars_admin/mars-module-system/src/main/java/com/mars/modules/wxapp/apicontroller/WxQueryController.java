@@ -221,6 +221,28 @@ public class WxQueryController extends CommentController{
         }
     }
 
+    /**
+     * 检查卡券是否保存地址
+     */
+    @PostMapping("checkMyCardAddress")
+    public Result checkMyCardAddress(@RequestBody JSONObject params){
+        try {
+            String id = params.getString("id");
+            if(StringUtils.checkIsNull(id)){
+                return Result.error("卡券无效");
+            }
+            if(playerService.checkCardHaveAddress(id)){
+                return Result.ok();
+            }else {
+                return Result.error("请先关联奖品收货地址");
+            }
+        }catch (Exception e){
+            log.info("查询我的地址出错");
+            log.error(e.getMessage());
+            return Result.error("服务器查询失败");
+        }
+    }
+
 
 
 

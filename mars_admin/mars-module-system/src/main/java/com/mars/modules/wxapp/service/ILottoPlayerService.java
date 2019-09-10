@@ -32,4 +32,8 @@ public interface ILottoPlayerService extends IService<LottoPlayer> {
     Map<String,Object> findPlayerInfo(String lottoNo, String wxNo);
 
     String confirmCard(String id,String wxNo);
+
+    boolean checkCardHaveAddress(String id);
+
+    void saveCardAddress(String id, String name, String tel, String s);
 }

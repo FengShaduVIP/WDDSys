@@ -153,4 +153,23 @@ public class LottoPlayerServiceImpl extends ServiceImpl<LottoPlayerMapper, Lotto
             return "无权核销该卡券";
         }
     }
+
+    @Override
+    public void saveCardAddress(String id, String name, String tel, String address) {
+        LottoPlayer player = baseMapper.selectById(id);
+        player.setName(name);
+        player.setTel(tel);
+        player.setAddress(address);
+        player.setStatus(1);
+        baseMapper.updateById(player);
+    }
+
+    @Override
+    public boolean checkCardHaveAddress(String id) {
+        LottoPlayer player = baseMapper.selectById(id);
+        if(player.getAddress()!=null&&player.getTel()!=null&&player.getName()!=null){
+            return true;
+        }
+        return false;
+    }
 }
