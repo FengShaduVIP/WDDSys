@@ -1,5 +1,6 @@
 package com.mars.modules.wxapp.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mars.modules.wxapp.entity.WxUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -15,4 +16,6 @@ import java.util.Map;
 public interface WxUserMapper extends BaseMapper<WxUser> {
 
     Map<String,String> queryMyAddress(@Param("wxNo") String wxNo);
+
+    Page<Map<String,Object>> queryRankList(Page<Object> page);
 }

@@ -2,6 +2,7 @@ package com.mars.modules.wxapp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mars.common.constant.CacheConstant;
 import com.mars.common.constant.CommonConstant;
 import com.mars.common.system.api.ISysBaseAPI;
@@ -238,4 +239,14 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
         return "0"+ranNum;
     }
 
+    /**
+     * 查询排行榜列表信息
+     * @param page
+     * @return
+     */
+    @Override
+    public Page<Map<String, Object>> queryRankList(Page<Object> page) {
+
+        return baseMapper.queryRankList(page);
+    }
 }

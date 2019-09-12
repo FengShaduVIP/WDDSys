@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -57,6 +58,9 @@ public class OpenLotto {
     private void openLotto(List<LottoInfo> lottoInfos){
         if(lottoInfos!=null){
             for (LottoInfo lottoInfo :lottoInfos){
+                if(lottoInfo.getOpenTime().after(new Date())){
+                    continue;
+                }
                 log.info("抽奖活动：" +lottoInfo.getNickName() +" 开始开奖。ID:"+lottoInfo.getId());
                 //查询所有 参与人员
                 List<LottoPlayer> players = playerService.queryListByLottoId(lottoInfo.getId());

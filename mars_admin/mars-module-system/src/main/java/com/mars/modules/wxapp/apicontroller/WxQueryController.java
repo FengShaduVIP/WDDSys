@@ -243,6 +243,22 @@ public class WxQueryController extends CommentController{
         }
     }
 
+    /**
+     * 查询排行统计
+     */
+    @GetMapping("queryRankList")
+    @ResponseBody
+    public Result queryRankList(@RequestParam Integer page,@RequestParam Integer pageSize){
+        try {
+            Page<Map<String,Object>> rankList = wxUserService.queryRankList(new Page<Object>(page,pageSize));
+            return Result.ok(rankList);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+            log.info("查询排行榜列表失败");
+            return Result.error("查询失败，服务器出错");
+        }
+    }
 
 
 

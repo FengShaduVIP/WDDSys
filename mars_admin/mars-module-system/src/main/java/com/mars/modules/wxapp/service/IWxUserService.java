@@ -1,5 +1,6 @@
 package com.mars.modules.wxapp.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mars.modules.wxapp.entity.WxUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -28,4 +29,6 @@ public interface IWxUserService extends IService<WxUser> {
     void addSumJoinNum(String wxNo);
 
     void addSumWinnerNum(String wxNo, int winnerSumNum);
+
+    Page<Map<String, Object>> queryRankList(Page<Object> page);
 }

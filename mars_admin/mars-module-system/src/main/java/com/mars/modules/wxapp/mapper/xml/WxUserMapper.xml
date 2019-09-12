@@ -5,4 +5,9 @@
     <select id="queryMyAddress" resultType="java.util.Map">
 
     </select>
+
+    <!--查询排行榜-->
+    <select id="queryRankList" resultType="java.util.LinkedHashMap">
+        SELECT  nick_name AS nickName,avatar_url AS avatarUrl,join_num AS joinNum,new_num AS newNum ,(@i :=@i + 1) AS No FROM wx_user,(SELECT @i := 0) AS it WHERE status = 0 ORDER BY join_num DESC
+    </select>
 </mapper>

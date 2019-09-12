@@ -194,4 +194,6 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
         int count = baseMapper.selectCount(queryWrapper);
         return String.format("%08d",count);
     }
+
+
 }

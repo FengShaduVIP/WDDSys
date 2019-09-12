@@ -29,4 +29,5 @@ public interface ILottoInfoService extends IService<LottoInfo> {
     boolean deleteLottoById(String lottoId);
 
     List<LottoInfo> queryNotOpenLotto(int type);
+
 }
