@@ -108,7 +108,7 @@ public class CommonServiceImpl implements ICommonService {
         jsonObject.put("scene",scene);
         jsonObject.put("width",width);
         jsonObject.put("is_hyaline",is_hyaline);
-        byte response[] = OKHttpUtil.httpPost(url,jsonObject);
+        byte response[] = OKHttpUtil.httpPostByte(url,jsonObject);
         InputStream is = new BufferedInputStream(new ByteArrayInputStream(response));
         return QiniuCloudUtil.uploadQrCode(bucketNm,is,imgName);
     }

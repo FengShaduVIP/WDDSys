@@ -30,4 +30,5 @@ public interface ILottoInfoService extends IService<LottoInfo> {
 
     List<LottoInfo> queryNotOpenLotto(int type);
 
+    void sendMsgToPlayer(String id);
 }

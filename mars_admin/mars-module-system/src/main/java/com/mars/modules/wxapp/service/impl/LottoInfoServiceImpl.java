@@ -1,5 +1,7 @@
 package com.mars.modules.wxapp.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,6 +36,9 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
 
     @Resource
     private IWxUserService wxUserService;
+
+    @Resource
+    private IMsgInfoService msgInfoService;
 
     @Override
     public LottoInfo saveLottoInfo(String userId,LottoInfo lottoInfo) {
@@ -143,10 +148,12 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
             if(lottoInfo==null){
                 return false;
             }
+            WxUser userInfo = wxUserService.getUserByWxNo(wxNo);
             lottoInfo.setJoinNum(lottoInfo.getJoinNum()+1);
             baseMapper.updateById(lottoInfo);
             LottoPlayer player = new LottoPlayer();
             player.setWxNo(wxNo);
+            player.setOpenId(userInfo.getOpenId());
             player.setLottoId(lottoId);
             player.setLottoNo(lottoInfo.getLottoNo());
             player.setAvatarUrl(lottoInfo.getAvatarUrl());
@@ -180,6 +187,36 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
             queryWrapper.eq("status",0);
             queryWrapper.eq("is_end",0);
             return baseMapper.selectList(queryWrapper);
+        }
+    }
+
+    /**
+     * 活动开奖结束 发送消息给用户
+     * @param lottoId
+     */
+    @Override
+    public void sendMsgToPlayer(String lottoId) {
+        String templateId = "jnouuVFU--w4sgi7MPsozZ0u5fnD8JkqSrFfwwsoWOA";
+        String pagePath = "pages/index/detail/detail?id="+lottoId;
+        List<LottoPlayer> playerList = playerService.queryListByLottoId(lottoId);
+        List<Map<String,Object>> prizeList = prizeService.queryPrizesByLottoIdOrLottoNo(lottoId);
+        String prizesName = "";
+        for (int i = 0; i <prizeList.size(); i++) {
+            prizesName = prizesName +" "+prizeList.get(i).get("name");
+        }
+        if(playerList!=null&&playerList.size()>0){
+            JSONObject params = new JSONObject();
+            for (int i = 0; i < playerList.size(); i++) {
+                LottoPlayer player = playerList.get(i);
+                params.clear();
+                String keyword1 = "{\"value\":\"中奖名单已公布\",}";
+                String keyword2 = "{\"value\":\""+prizesName+"\",}";
+                String keyword3 = "{\"value\":\"您参加「"+player.getNickName()+" 」发起的抽奖正在开奖，点击查看中奖名单>>>\",}";
+                params.put("keyword1", JSON.parseObject(keyword1));
+                params.put("keyword2",JSON.parseObject(keyword2));
+                params.put("keyword3",JSON.parseObject(keyword3));
+                msgInfoService.SendWxAppMsg(player.getOpenId(),templateId,pagePath,params);
+            }
         }
     }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mars.modules.wxapp.mapper.WxFormIdMapper">
+
+
+    <!--按时间查询最早-->
+    <select id="findFormIdByOpenId" resultType="java.lang.String">
+        SELECT form_id FROM wx_form_id WHERE open_id = #{openId} AND is_used = 0 AND state = 0 ORDER BY create_time DESC limit 1
+    </select>
+</mapper>

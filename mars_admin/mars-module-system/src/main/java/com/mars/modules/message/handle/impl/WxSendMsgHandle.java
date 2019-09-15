@@ -10,4 +10,6 @@ public class WxSendMsgHandle implements ISendMsgHandle {
 		System.out.println("发微信消息模板");
 	}
 
+
+
 }

@@ -11,6 +11,7 @@ import com.mars.modules.system.service.impl.SysBaseApiImpl;
 import com.mars.modules.wxapp.entity.WxUser;
 import com.mars.modules.wxapp.service.ICommonService;
 import com.mars.modules.wxapp.service.ILottoPlayerService;
+import com.mars.modules.wxapp.service.IWxFormIdService;
 import com.mars.modules.wxapp.service.IWxUserService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,8 @@ public class WxCommonController extends CommentController {
     private SysBaseApiImpl sysBaseApi;
     @Resource
     private ICommonService commonService;
+    @Resource
+    private IWxFormIdService formIdService;
 
 
     /**
@@ -124,6 +127,32 @@ public class WxCommonController extends CommentController {
             return Result.error("服务器出错，");
         }
     }
+
+    /**
+     * 微信小程序 上传文件后记录日志
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("saveFormID")
+    public Result saveFormID(@RequestBody JSONObject jsonObject){
+        try {
+            String formId = jsonObject.getString("formId");
+            if(StringUtils.isEmpty(formId)||formId.indexOf("mock")>0){
+                return Result.error("formid不能为空");
+            }
+            String wxNo = getLoginUserName();
+            int count = formIdService.saveFormId(wxNo,formId);
+            if(count>0){
+                return Result.ok("保存成功");
+            }
+            return Result.error("保存formId失败");
+        }catch (Exception e){
+            log.error("保存formId失败--->"+e.getMessage());
+            return Result.error("服务器出错，");
+        }
+    }
+
+
 
     /**
      * 添加或者更新微信小程序用户信息

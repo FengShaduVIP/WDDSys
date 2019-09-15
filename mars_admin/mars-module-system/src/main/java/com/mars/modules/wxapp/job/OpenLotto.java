@@ -91,7 +91,10 @@ public class OpenLotto {
                 }
                 wxUserService.addSumWinnerNum(lottoInfo.getWxNo(),winnerSumNum);
                 lottoInfo.setIsEnd(1);
-                lottoInfoService.updateById(lottoInfo);
+                boolean flag = lottoInfoService.updateById(lottoInfo);
+                if(flag){
+                    lottoInfoService.sendMsgToPlayer(lottoInfo.getId());
+                }
                 log.info("抽奖活动：" +lottoInfo.getNickName() +" 开奖结束 ");
             }
         }
