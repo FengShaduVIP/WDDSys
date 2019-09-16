@@ -217,7 +217,7 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
     public void addSumWinnerNum(String wxNo, int winnerSumNum) {
         WxUser wxUser = getUserByWxNo(wxNo);
         if(wxUser!=null){
-            wxUser.setJoinNum(wxUser.getWinNum()+winnerSumNum);
+            wxUser.setWinNum(wxUser.getWinNum()+winnerSumNum);
             baseMapper.updateById(wxUser);
         }
     }

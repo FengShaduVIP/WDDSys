@@ -46,6 +46,7 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
         if(wxUser!=null){
             lottoInfo.setAvatarUrl(wxUser.getAvatarUrl());
             lottoInfo.setWxNo(wxUser.getWxNo());
+            lottoInfo.setWxName(wxUser.getNickName());
         }
         wxUser.setNewNum(wxUser.getNewNum()+1);
         wxUserService.updateById(wxUser);

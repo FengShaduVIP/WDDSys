@@ -10,7 +10,7 @@
 
     <!--查询 我参与的/我中奖的 活动列表 type == 1  查询我中奖的 -->
     <select id="queryMyJoinOrWin" resultType="java.util.Map">
-        SELECT l.id,l.lotto_no, l.banner, l.open_type AS  openType , DATE_FORMAT(p.create_time,'%Y-%m-%d %h:%i') AS createTime, l.view_num AS viewNum,
+        SELECT l.id,l.lotto_no, l.banner, l.is_end AS isEnd,l.open_type AS  openType , DATE_FORMAT(p.create_time,'%Y-%m-%d %h:%i') AS createTime, l.view_num AS viewNum,
         l.join_num AS joinNum ,u.avatar_url as avatarUrl,l.nick_name as nickName
         FROM wx_player p  LEFT JOIN wx_lotto_info l ON p.lotto_id = l.id
         <if test="type==1">
