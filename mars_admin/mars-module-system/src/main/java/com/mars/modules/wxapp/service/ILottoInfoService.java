@@ -31,4 +31,6 @@ public interface ILottoInfoService extends IService<LottoInfo> {
     List<LottoInfo> queryNotOpenLotto(int type);
 
     void sendMsgToPlayer(String id);
+
+    List<Map<String,Object>> queryWinnerList(String lottoId);
 }

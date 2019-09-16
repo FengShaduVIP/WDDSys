@@ -221,6 +221,27 @@ public class LottoInfoServiceImpl extends ServiceImpl<LottoInfoMapper, LottoInfo
     }
 
     /**
+     * 查询中奖者名单
+     * @param lottoId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryWinnerList(String lottoId) {
+        List<Map<String,Object>> prizes = prizeService.queryPrizesByLottoIdOrLottoNo(lottoId);
+        List<Map<String,Object>> result = new ArrayList<>();
+        if(prizes!=null&&prizes.size()>0){
+            for (int i = 0; i < prizes.size(); i++) {
+                Map<String,Object> prizeMap = new HashMap<>();
+                prizeMap.put("prizeName",MapUtils.getString(prizes.get(i),"name"));
+                List<Map<String, Object>> winnerList = playerService.queryWinnerList(lottoId,MapUtils.getString(prizes.get(i),"id"));
+                prizeMap.put("winners",winnerList);
+                result.add(prizeMap);
+            }
+        }
+        return result;
+    }
+
+    /**
      * 获取抽奖活动 编码
      * 规则 按数量排序
      * @return

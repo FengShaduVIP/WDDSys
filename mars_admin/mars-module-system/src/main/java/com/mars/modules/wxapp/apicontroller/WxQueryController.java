@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -256,6 +257,23 @@ public class WxQueryController extends CommentController{
             e.printStackTrace();
             log.error(e.getMessage());
             log.info("查询排行榜列表失败");
+            return Result.error("查询失败，服务器出错");
+        }
+    }
+
+    /**
+     * 查询中奖者名单
+     */
+    @GetMapping("queryWinnerList")
+    @ResponseBody
+    public Result queryWinnerList(@RequestParam String lottoId){
+        try {
+            List<Map<String,Object>> rankList = lottoInfoService.queryWinnerList(lottoId);
+            return Result.ok(rankList);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+            log.info("查询中奖者名单");
             return Result.error("查询失败，服务器出错");
         }
     }

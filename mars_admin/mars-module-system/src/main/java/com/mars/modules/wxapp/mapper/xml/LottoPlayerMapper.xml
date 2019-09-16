@@ -36,4 +36,10 @@
         SELECT p.id, u.avatar_url,u.nick_name,p.address,p.tel,p.name, p.prize_img AS img ,p.prize_name AS  prizeName,DATE_FORMAT(p.create_time,'%Y-%m-%d %h:%i') AS createTime FROM wx_player p LEFT JOIN wx_user u ON u.wx_no = p.wx_no WHERE p.is_used=0 AND p.lotto_no = #{lottoNo} AND p.wx_no = #{wxNo} AND  <![CDATA[ p.status < 2  ]]>
     </select>
 
+    <!--查询中奖者名单-->
+    <select id="queryWinnerList" resultType="java.util.Map">
+        select p.open_id AS openId, u.avatar_url AS avatarUrl,u.nick_name AS nickName
+        from wx_player p LEFT JOIN wx_user u ON p.open_id = u.open_id WHERE p.lotto_id = #{lottoId} and p.prize_id = #{prizeId}
+
+    </select>
 </mapper>

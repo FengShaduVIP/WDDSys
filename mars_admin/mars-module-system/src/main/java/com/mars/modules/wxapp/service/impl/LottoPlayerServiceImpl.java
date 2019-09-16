@@ -172,4 +172,9 @@ public class LottoPlayerServiceImpl extends ServiceImpl<LottoPlayerMapper, Lotto
         }
         return false;
     }
+
+    @Override
+    public List<Map<String, Object>> queryWinnerList(String lottoId,String prizeId) {
+        return baseMapper.queryWinnerList(lottoId,prizeId);
+    }
 }

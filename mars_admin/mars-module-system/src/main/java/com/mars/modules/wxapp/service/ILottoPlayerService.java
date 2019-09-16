@@ -36,4 +36,6 @@ public interface ILottoPlayerService extends IService<LottoPlayer> {
     boolean checkCardHaveAddress(String id);
 
     void saveCardAddress(String id, String name, String tel, String s);
+
+    List<Map<String,Object>> queryWinnerList(String lottoId,String prizeId);
 }
