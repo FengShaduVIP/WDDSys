@@ -16,12 +16,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Slf4j
 @EnableSwagger2
 @SpringBootApplication
+@EnableScheduling
 @EnableCaching  //开启缓存
 public class JeecgApplication {
 
