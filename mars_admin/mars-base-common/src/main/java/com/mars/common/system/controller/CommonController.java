@@ -77,17 +77,22 @@ public class CommonController {
 	@GetMapping("getUpToken")
 	public Map<String,String> getUpToken(){
 		Map<String,String> map = new HashMap<>();
-		String upToken = null;
-		if(!redisUtil.hasKey(CacheConstant.QINIU_UPTOKEN_CACHE)){
-			upToken = QiniuCloudUtil.getToken("wdd_01");
-			redisUtil.set(CacheConstant.QINIU_UPTOKEN_CACHE,upToken);
-			redisUtil.expire(CacheConstant.QINIU_UPTOKEN_CACHE,3500);
-			log.info("bucketNm:{},获取新的uptoken:{}","wdd_01",upToken);
-		}else{
-			upToken = redisUtil.get(CacheConstant.QINIU_UPTOKEN_CACHE).toString();
-			log.info("uptoken:{}","wdd_01",upToken);
+		try{
+			String upToken = null;
+			if(!redisUtil.hasKey(CacheConstant.QINIU_UPTOKEN_CACHE)){
+				upToken = QiniuCloudUtil.getToken("wdd_01");
+				redisUtil.set(CacheConstant.QINIU_UPTOKEN_CACHE,upToken);
+				redisUtil.expire(CacheConstant.QINIU_UPTOKEN_CACHE,3500);
+				log.info("bucketNm:{},获取新的uptoken:{}","wdd_01",upToken);
+			}else{
+				upToken = redisUtil.get(CacheConstant.QINIU_UPTOKEN_CACHE).toString();
+				log.info("uptoken:{}","wdd_01",upToken);
+			}
+			map.put("uptoken",upToken);
+		}catch (Exception e){
+			e.printStackTrace();
+			log.error("获取uploadToken 失败");
 		}
-		map.put("uptoken",upToken);
 		return map;
 	}
 
