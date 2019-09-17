@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mars.common.api.vo.Result;
 import com.mars.common.constant.CommonConstant;
 import com.mars.common.system.vo.LoginUser;
+import com.mars.common.util.DateUtils;
 import com.mars.common.util.GetUrlPic;
 import com.mars.common.util.QiniuCloudUtil;
 import com.mars.common.util.encryption.AesEncryptUtil;
@@ -22,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -171,9 +173,9 @@ public class WxCommonController extends CommentController {
             String avatarUrl = wxUser.getAvatarUrl();
             if(newObj==null){
                 wxUser.setLevel(CommonConstant.WXAPP_USER_LEVEL_0);
-                String fileName = "wxapp/wxUser/avatarUrl/"+wxUser.getWxNo()+".png";
+                String fileName = "wxapp/wxUser/avatarUrl/"+ DateUtils.getMillis()+".png";
                 Result resultUrl =  QiniuCloudUtil.uploadQrCode("wdd_01", GetUrlPic.readInputStream(avatarUrl),fileName);
-                wxUser.setAvatarUrl(resultUrl.getMessage());
+                wxUser.setAvatarUrl("https://img.cdn.sweetcat.wang/"+resultUrl.getMessage());
                 wxUserService.saveOrUpdate(wxUser);
                 sysBaseApi.addLog(loginUser.getUsername()+"添加微信用户信息成功",CommonConstant.LOG_TYPE_2,0);
                 result.setResult(newObj);
@@ -181,7 +183,7 @@ public class WxCommonController extends CommentController {
             }else{
                 String fileName = "wxapp/wxUser/avatarUrl/"+wxUser.getWxNo()+".png";
                 Result resultUrl =  QiniuCloudUtil.uploadQrCode("wdd_01", GetUrlPic.readInputStream(avatarUrl),fileName);
-                wxUser.setAvatarUrl(resultUrl.getMessage());
+                wxUser.setAvatarUrl("https://img.cdn.sweetcat.wang/"+resultUrl.getMessage());
                 wxUser.setId(newObj.getId());
                 wxUserService.updateById(wxUser);
                 sysBaseApi.addLog(loginUser.getUsername()+" 更新微信用户信息成功",CommonConstant.LOG_TYPE_2,0);
