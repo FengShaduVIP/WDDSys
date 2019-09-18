@@ -181,7 +181,7 @@ public class WxCommonController extends CommentController {
                 result.setResult(newObj);
                 result.success("添加成功！");
             }else{
-                String fileName = "wxapp/wxUser/avatarUrl/"+wxUser.getWxNo()+".png";
+                String fileName = "wxapp/wxUser/avatarUrl/"+newObj.getWxNo()+".png";
                 Result resultUrl =  QiniuCloudUtil.uploadQrCode("wdd_01", GetUrlPic.readInputStream(avatarUrl),fileName);
                 wxUser.setAvatarUrl("https://img.cdn.sweetcat.wang/"+resultUrl.getMessage());
                 wxUser.setId(newObj.getId());
