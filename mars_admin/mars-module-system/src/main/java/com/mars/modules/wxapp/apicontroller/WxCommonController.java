@@ -176,11 +176,15 @@ public class WxCommonController extends CommentController {
                 String fileName = "wxapp/wxUser/avatarUrl/"+ DateUtils.getMillis()+".png";
                 Result resultUrl =  QiniuCloudUtil.uploadQrCode("wdd_01", GetUrlPic.readInputStream(avatarUrl),fileName);
                 wxUser.setAvatarUrl("https://img.cdn.sweetcat.wang/"+resultUrl.getMessage());
+                wxUser.setRegion("[\"北京市\",\"北京市\",\"东城区\"]");
                 wxUserService.saveOrUpdate(wxUser);
                 sysBaseApi.addLog(loginUser.getUsername()+"添加微信用户信息成功",CommonConstant.LOG_TYPE_2,0);
                 result.setResult(newObj);
                 result.success("添加成功！");
             }else{
+                if(StringUtils.isEmpty(newObj.getRegion())){
+                    wxUser.setRegion("[\"北京市\",\"北京市\",\"东城区\"]");
+                }
                 String fileName = "wxapp/wxUser/avatarUrl/"+newObj.getWxNo()+".png";
                 Result resultUrl =  QiniuCloudUtil.uploadQrCode("wdd_01", GetUrlPic.readInputStream(avatarUrl),fileName);
                 wxUser.setAvatarUrl("https://img.cdn.sweetcat.wang/"+resultUrl.getMessage());

@@ -4,7 +4,7 @@
 
     <!--根据活动id 或 活动编号 查询参与活动人员-->
     <select id="queryPlayersByLottoIdOrLottoNo" resultType="java.util.LinkedHashMap">
-        SELECT id,nick_name AS nickName,avatar_url AS avatarUrl,DATE_FORMAT(create_time,'%Y-%m-%d %h:%i') AS createTime FROM wx_player
+        SELECT p.id,u.nick_name AS nickName,u.avatar_url AS avatarUrl,DATE_FORMAT(p.create_time,'%Y-%m-%d %h:%i') AS createTime FROM wx_player p LEFT JOIN wx_user u ON p.open_id = u.open_id
         WHERE (lotto_no = #{idOrNo} or lotto_id = #{idOrNo}) AND  status = 0 ORDER BY create_time DESC
     </select>
 
