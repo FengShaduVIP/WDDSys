@@ -43,6 +43,7 @@ public class ShiroConfig {
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 		// 配置不会被拦截的链接 顺序判断
+		filterChainDefinitionMap.put("/wxapi/query/queryLottoDetail", "anon"); //微信小程序活动详情
 		filterChainDefinitionMap.put("/wxapi/query/queryIndex", "anon"); //微信小程序查询首页每日推荐
 		filterChainDefinitionMap.put("/sys/wxLogin", "anon"); //微信小程序登录接口排除
 		filterChainDefinitionMap.put("/sys/login", "anon"); //登录接口排除
