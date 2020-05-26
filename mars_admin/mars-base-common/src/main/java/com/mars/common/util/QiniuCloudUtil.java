@@ -1,13 +1,7 @@
 package com.mars.common.util;
 
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.UUID;
-
-import com.google.gson.Gson;
-import com.mars.common.api.vo.Result;
-import com.mars.common.constant.CacheConstant;
+import com.alibaba.fastjson.JSON;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -19,7 +13,10 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.storage.model.FileInfo;
 import com.qiniu.util.Auth;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.UUID;
 
 @Slf4j
 public class QiniuCloudUtil {
@@ -32,7 +29,7 @@ public class QiniuCloudUtil {
 
         String bucketNm = "wdd_01";
         //通过文件来传递
-      upload(bucketNm,file);
+        upload(bucketNm,file);
 
         //通过文件流来上传文件
         //InputStream in = new FileInputStream(file);
@@ -48,7 +45,7 @@ public class QiniuCloudUtil {
         //获取文件信息
         //getBucketsInfo();
 
-        getFileInfo(bucketNm);
+        //getFileInfo(bucketNm);
     }
 
     /**
@@ -177,7 +174,7 @@ public class QiniuCloudUtil {
             Response response = uploadManager.put(in,key,token, null,null);
 
             //解析上传成功的结果
-            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+            DefaultPutRet putRet = JSON.toJavaObject(JSON.parseObject(response.bodyString()), DefaultPutRet.class);
             System.out.println(putRet.key);
             System.out.println(putRet.hash);
 
@@ -193,7 +190,7 @@ public class QiniuCloudUtil {
      * @param in        输入流
      * @return
      */
-    public static com.mars.common.api.vo.Result uploadQrCode(String bucketNm,InputStream in,String key) {
+    public static String uploadQrCode(String bucketNm,InputStream in,String key) {
         try {
             UploadManager uploadManager = getUploadManager(bucketNm);
             //获取token
@@ -201,12 +198,13 @@ public class QiniuCloudUtil {
             //上传输入流
             Response response = uploadManager.put(in,key,token, null,null);
             //解析上传成功的结果
-            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-           return com.mars.common.api.vo.Result.ok(putRet.key);
+            DefaultPutRet putRet = JSON.toJavaObject(JSON.parseObject(response.bodyString()), DefaultPutRet.class);
+            log.info("返回上图片key::"+putRet.key);
+            return putRet.key;
         }catch (Exception e) {
             log.error("七牛云 上传微信小程序二维码失败");
+            return null;
         }
-        return com.mars.common.api.vo.Result.ok();
     }
     /**
      * 通过文件来传递数据
@@ -224,7 +222,7 @@ public class QiniuCloudUtil {
             Response response = uploadManager.put(file.getAbsolutePath(),newName(file.getName()), token);
 
             //解析上传成功的结果
-            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+            DefaultPutRet putRet = JSON.toJavaObject(JSON.parseObject(response.bodyString()), DefaultPutRet.class);
             System.out.println(putRet.key);
             System.out.println(putRet.hash);
 

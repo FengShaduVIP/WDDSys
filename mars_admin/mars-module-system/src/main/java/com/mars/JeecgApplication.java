@@ -27,7 +27,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableCaching  //开启缓存
 public class JeecgApplication {
 
-  @Bean
+  /*@Bean
   public Connector connector(){
     Connector connector=new Connector("org.apache.coyote.http11.Http11NioProtocol");
     connector.setScheme("http");
@@ -52,7 +52,7 @@ public class JeecgApplication {
     };
     tomcat.addAdditionalTomcatConnectors(connector);
     return tomcat;
-  }
+  }*/
 
   public static void main(String[] args) throws UnknownHostException {
     //System.setProperty("spring.devtools.restart.enabled", "true");
